@@ -1,0 +1,29 @@
+<form #setlistForm="ngForm">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="form-group" [ngClass]="{'has-danger': name.dirty && name.errors}">
+        <label for="name">{{ 'NAME' | translate }}</label>
+        <input type="text"
+               class="form-control" [ngClass]="{'form-control-danger': name.dirty && name.errors}"
+               id="name"
+               [(ngModel)]="setlist.name"
+               [disabled]="isLoading"
+               name="name"
+               #name="ngModel"
+               pattern="[\w\xc0-\xff -]+"
+               autocomplete="off"
+               [unique]="setlistNames"
+               required>
+        <div class="form-control-feedback" *ngIf="name.dirty && name.errors?.required">
+          {{ 'ENTER_A_NAME_FOR_THE_SETLIST' | translate }}
+        </div>
+        <div class="form-control-feedback" *ngIf="name.dirty && name.errors?.unique">
+          {{ 'CHOOSE_A_NAME_THAT_DOES_NOT_EXIST_YET' | translate }}
+        </div>
+        <div class="form-control-feedback" *ngIf="name.dirty && name.errors?.pattern">
+          {{ 'CHOOSE_A_NAME_WITHOUT_INVALID_CHARACTERS' | translate }}
+        </div>
+      </div>
+    </div>
+  </div>
+</form>

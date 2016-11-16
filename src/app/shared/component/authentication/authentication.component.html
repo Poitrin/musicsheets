@@ -1,0 +1,12 @@
+<li class="nav-item" *ngIf="currentUserProfile">
+  <span class="nav-link">{{ currentUserProfile.getName() }}</span>
+</li>
+
+<li class="nav-item">
+  <button class="btn btn-primary"
+          *ngIf="isSignedIn === false"
+          (click)="signIn()">{{ 'SIGN_IN' | translate }}</button>
+  <button class="btn btn-secondary"
+          *ngIf="isSignedIn === true"
+          (click)="signOut()">{{ 'SIGN_OUT' | translate }}</button>
+</li>

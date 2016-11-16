@@ -1,0 +1,74 @@
+<div class="row">
+  <div class="col-xl-6">
+    <h3>
+      <a [href]="'https://drive.google.com/drive/folders/' + SHEETS_DRIVE_FOLDER"
+         target="_blank">{{ 'AVAILABLE_SHEETS' | translate }}</a>
+    </h3>
+
+    <div class="row">
+      <div class="col-xs-9">
+        <div class="form-group">
+          <input type="text"
+                 class="form-control"
+                 placeholder="{{ 'FIND_A_SHEET' | translate }}"
+                 [(ngModel)]="query">
+        </div>
+      </div>
+      <div class="col-sm-3">
+        <div class="form-group">
+          <button class="btn btn-secondary float-sm-right"
+                  (click)="refresh()"
+                  [disabled]="sheetsLoadingMessage.isLoading">{{ 'REFRESH' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <app-loading-message #sheetsLoadingMessage></app-loading-message>
+
+      <em *ngIf="sheets && !query">{{ 'NUMBER_SHEETS_AVAILABLE' | translate:{number: sheets.length} }}.</em>
+
+      <div class="form-group" [hidden]="!query">
+        <ul class="list-group">
+          <li class="list-group-item" *ngFor="let sheet of sheets | sheet:query | slice:0:30  | orderBy:'name'">
+            <div class="btn-group btn-group-sm float-xs-right" role="group" aria-label="...">
+              <button class="btn btn-sm btn-secondary"
+                      (click)="add(sheet)"
+                      [disabled]="isOnSetlist(sheet)">+
+              </button>
+            </div>
+            <a [href]="sheet.url" target="_blank">{{sheet.name}}</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-xl-6">
+    <h3>{{ 'SHEETS_ON_THE_SETLIST' | translate }}</h3>
+
+    <app-loading-message [isLoading]="!setlist.sheets"></app-loading-message>
+
+    <div class="form-group">
+      <ul class="list-group">
+        <li class="list-group-item" *ngFor="let sheet of setlist.sheets; let i = index">
+          <div class="btn-group btn-group-sm float-xs-right" role="group">
+            <button class="btn btn-sm btn-secondary"
+                    (click)="moveUp(i)"
+                    [disabled]="i === 0">↑
+            </button>
+            <button class="btn btn-sm btn-secondary"
+                    (click)="moveDown(i)"
+                    [disabled]="i === setlist.sheets.length - 1">↓
+            </button>
+            <button class="btn btn-sm btn-secondary"
+                    (click)="remove(sheet)">✗
+            </button>
+          </div>
+          <a [href]="sheet.url" target="_blank">{{sheet.name}}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

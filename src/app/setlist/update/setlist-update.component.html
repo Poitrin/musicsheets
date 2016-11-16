@@ -1,0 +1,22 @@
+<a class="btn btn-secondary" routerLink="/setlists" style="margin-bottom: 15px">← {{ 'BACK' | translate }}</a>
+
+<h1>{{ 'UPDATE_A_SETLIST' | translate }}</h1>
+
+<app-loading-message [isLoading]="!setlist"></app-loading-message>
+
+<app-setlist-form #setlistForm [isLoading]="isLoading" [setlist]="setlist"></app-setlist-form>
+
+<app-sheet-manager [setlist]="setlist"></app-sheet-manager>
+
+<div class="row" *ngIf="setlist">
+  <div class="col-md-6">
+    <div class="form-group">
+      <button class="btn btn-primary"
+              (click)="update()"
+              [disabled]="!setlistForm?.form?.valid ||
+              setlist.sheets?.length < 1 ||
+              isLoading">{{ 'UPDATE' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,54 @@
+<h1>{{ 'SHEETS' | translate }}</h1>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="form-group">
+      <input type="text"
+             class="form-control"
+             placeholder="{{ 'FIND_A_SHEET' | translate }}"
+             [(ngModel)]="query">
+    </div>
+  </div>
+
+  <div class="col-sm-3">
+    <div class="form-group">
+      <button class="btn btn-secondary"
+              (click)="refresh()"
+              [disabled]="sheetsLoadingMessage.isLoading">{{ 'REFRESH' | translate }}
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-loading-message #sheetsLoadingMessage></app-loading-message>
+
+<div class="row">
+  <div class="col-md-12">
+    <ul class="list-group">
+      <li class="list-group-item" *ngFor="let sheet of sheets | sheet:query | orderBy:'name'">
+        <h6 class="list-group-item-heading"><a [href]="sheet.url" target="_blank">{{sheet.name}}</a></h6>
+        <ul class="setlistsOfSheet">
+          <li *ngFor="let tag of sheet.tags">
+            <span class="tag tag-primary">
+              <a class="pointer" (click)="removeTag(sheet, tag)">✗</a>
+              {{tag}}
+            </span>
+          </li>
+          <li>
+            <span class="tag tag-primary">
+              <a class="pointer" (click)="createTag(sheet)">+
+                {{ 'ADD_A_NEW_TAG' | translate }}
+              </a>
+            </span>
+          </li>
+        </ul>
+
+        <ul class="setlistsOfSheet">
+          <li *ngFor="let setlist of getSetlistsForSheet(sheet)">
+            <a [routerLink]="['/setlists', setlist.id]"><span class="tag tag-info">{{setlist.name}}</span></a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>

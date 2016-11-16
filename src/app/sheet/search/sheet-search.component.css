@@ -1,0 +1,13 @@
+.setlistsOfSheet {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.setlistsOfSheet li {
+  display: inline;
+}
+
+.pointer {
+  cursor: pointer;
+}

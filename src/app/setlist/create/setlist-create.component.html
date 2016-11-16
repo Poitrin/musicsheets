@@ -1,0 +1,20 @@
+<a class="btn btn-secondary" routerLink="/setlists" style="margin-bottom: 15px">← {{ 'BACK' | translate }}</a>
+
+<h1>{{ 'CREATE_A_NEW_SETLIST' | translate }}</h1>
+
+<app-setlist-form #setlistForm [isLoading]="isLoading" [setlist]="setlist"></app-setlist-form>
+
+<app-sheet-manager [setlist]="setlist"></app-sheet-manager>
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="form-group">
+      <button class="btn btn-primary"
+              (click)="create()"
+              [disabled]="!setlistForm.form.valid ||
+              setlist.sheets.length < 1 ||
+              isLoading">{{ 'CREATE' | translate }}
+      </button>
+    </div>
+  </div>
+</div>

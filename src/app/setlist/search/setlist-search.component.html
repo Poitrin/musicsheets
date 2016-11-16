@@ -1,0 +1,43 @@
+<h1>{{ 'SETLISTS' | translate }}</h1>
+
+<div class="row">
+  <div class="col-md-4">
+    <div class="form-group">
+      <input type="text"
+             class="form-control"
+             placeholder="{{ 'FIND_A_SETLIST' | translate }}"
+             [(ngModel)]="query">
+    </div>
+  </div>
+  <div class="col-md-8">
+    <div class="form-group">
+      <a class="btn btn-primary" routerLink="/setlists/create">{{ 'CREATE_A_NEW_SETLIST' | translate }}</a>
+    </div>
+  </div>
+</div>
+
+<app-loading-message></app-loading-message>
+
+<div class="row">
+  <div class="col-md-4"
+       *ngFor="let setlist of setlists | setlist:query | orderBy:'lastUpdated' | reverse; let i = index">
+
+    <div class="card">
+      <div class="card-block">
+        <span class="tag tag-pill tag-default float-xs-right">
+          {{ setlist.lastUpdated | date:('DATE_FORMAT' | translate) }}</span>
+        <h4 class="card-title">
+          <a [routerLink]="['/setlists', setlist.id]">
+            {{setlist.name}}
+          </a></h4>
+        <h6 class="card-subtitle text-muted" style="margin-bottom: 1.25rem">{{setlist.owner.name}}</h6>
+        <a class="btn btn-primary" [href]="setlist.zipFileLink" target="_blank">{{ 'DOWNLOAD_ZIP' | translate }}</a>
+        <button class="btn btn-secondary"
+                (click)="destroy(setlist.id)"
+                [disabled]="!setlist.isRemovable">{{ 'REMOVE' | translate }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
