@@ -155,26 +155,31 @@ The following requests are possible at the moment:
   
 
 ## To do / ideas
-#### Audio files
+### Audio files
 - [ ] Add audio file(s) to sheet
 - [ ] A sheet can have multiple songs (different versions)
 - [ ] An audio file can have multiple songs
-#### Lyrics
+
+### Lyrics
 - [ ] Filter sheet lists by lyrics
 - [ ] Use the lyrics of every sheet to create a Google Document which contains all the lyrics
-#### Author(s)
+
+### Author(s)
 - [ ] Add an author to a sheet
 - [ ] Filter sheet lists by author
-#### Filter and sorting
+
+### Filter and sorting
 - [ ] "Hey Jude" and "Jude Hey" should display the same results
 - [ ] Take into account abbreviations (e.g. Saint = St) for filter
 - [ ] Ignore accents/Umlaute/etc. for filter
 - [ ] Allow sorting of the setlists and sheets (name, last updated)
-#### Code / Invisible to the user
+
+### Code / Invisible to the user
 - [ ] Code: Add comments
 - [ ] Code: Add tests (Front and Back)
 - [ ] Backend (API) validation of list name
-#### Misc.
+
+### Misc.
 - [ ] Display a message that you need at least 1 sheet to create a list
 - [ ] Find and handle multiple versions of the same sheet
 - [ ] Add a language switch
