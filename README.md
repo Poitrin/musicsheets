@@ -72,7 +72,7 @@ Insert the `scriptId` and your `developerEmail` (that you used to log in) in the
 You'll need to create a `clientId`, in order to authenticate the user and execute the GAS.
 [Open the Google Developers Console](https://console.developers.google.com/) and make sure you've selected the right project (create a new one, if needed).
 
-Don't forget to enable the `Google Apps Script Execution API` in the Google Developers Console: `Dashboard > Activate API > (Search for Google Apps Script Execution API) > Activate`. Otherwise, you’ll receive a "Google Apps Script Execution API ... is disabled" error.
+Don't forget to enable the `Google Apps Script Execution API` and the `Drive API` in the Google Developers Console: `Dashboard > Activate API > … Search for (Google Apps Script Execution|Drive) API … > Activate`. Otherwise, you’ll receive a "Google Apps Script Execution API ... is disabled" error.
 
 Click on `Credentials` (on the left), then the button `Create credentials > OAuth-Client-ID`. You'll need to enter a product name for the OAuth consent screen, if necessary.
 
@@ -110,29 +110,74 @@ Then, run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.p
 To get more help on the `angular-cli` use `ng --help` or go check out the [Angular-CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
 
+## Design decisions
+### Saving setlists
+1. Google Drive allows to save the same file in multiple folders, _without_ copying the files. You can do this with Google Apps Script, or [via the Drive web app, by choosing a file and hitting Shift+Z](https://productforums.google.com/forum/#!topic/drive/lf4fqed4n4k).
+
+   Advantages:
+   * The most "native" solution: we only have files and folders, no additional JSON/spreadsheet/… files.
+   * `file.getParents()` could be used to list all setlists of a sheet.
+   
+   Disadvantages:
+   * If the Drive user deletes a file in a folder, it is deleted in every other folder too.
+   * The Drive Desktop client doesn’t support "linked files" and just creates a copy in every folder.
+   * The order of the files (sheets) in a folder (setlist) can’t be specified.
+1. 1 setlist = 1 JSON file.
+
+   Disadvantages:
+   * File structure could be damaged, and parsing errors could occur.
+1. 1 setlist = Spreadsheet file.
+
+   Advantages:
+   * Database table-like structure.
+   * No JSON parsing needed.
+   
+   Disadvantages:
+   * Needs an additional OAuth permission.
+
+### REST-inspired API calls
+A method of a Google Apps Script can only be executed with a `POST` request. HTTP requests like `POST /setlists` are not possible. This is why the request body’s `parameters` contains an array with a HTTP method, a path, and the payload.
+```JavaScript
+var request = {
+  "function": GapiService.MAIN_FUNCTION_NAME,
+  parameters: [method, path, payload]
+}
+```
+The following requests are possible at the moment:
+* Sheets  
+  `GET /sheets`  
+  `PUT /sheets/:id {tags: [...]}`
+* Setlists  
+  `GET /setlists`  
+  `POST /setlists {...}`  
+  `PUT /setlists/:id {...}`  
+  `DELETE /setlists/:id`
+  
 
 ## To do / ideas
-- [x] Translate the UI (French + English + German)
-- [ ] Code: Add comments
-- [ ] Code: Add tests (Front and Back)
-- [x] Filter sheet lists by name
-- [x] Add tags to sheet
-- [x] Filter sheet lists by tag
+#### Audio files
 - [ ] Add audio file(s) to sheet
+- [ ] A sheet can have multiple songs (different versions)
+- [ ] An audio file can have multiple songs
+#### Lyrics
 - [ ] Filter sheet lists by lyrics
-- [ ] "Hey Jude" and "Jude Hey" should display the same results
-- [ ] Ignore accents/Umlaute/etc. for filter
-- [ ] Display a message that you need at least 1 sheet to create a list
-- [ ] Find and handle multiple versions of the same sheet
-- [ ] Backend (API) validation of list name
-- [ ] Allow sorting of the sheets (name, last updated)
+- [ ] Use the lyrics of every sheet to create a Google Document which contains all the lyrics
+#### Author(s)
 - [ ] Add an author to a sheet
 - [ ] Filter sheet lists by author
+#### Filter and sorting
+- [ ] "Hey Jude" and "Jude Hey" should display the same results
+- [ ] Take into account abbreviations (e.g. Saint = St) for filter
+- [ ] Ignore accents/Umlaute/etc. for filter
+- [ ] Allow sorting of the setlists and sheets (name, last updated)
+#### Code / Invisible to the user
+- [ ] Code: Add comments
+- [ ] Code: Add tests (Front and Back)
+- [ ] Backend (API) validation of list name
+#### Misc.
+- [ ] Display a message that you need at least 1 sheet to create a list
+- [ ] Find and handle multiple versions of the same sheet
 - [ ] Add a language switch
-- [ ] An audio file can have multiple songs
-- [ ] A sheet can have multiple songs
 - [ ] Get an overview over the list, instead of immediately editing it?
 - [ ] Delete a setlist of someone else
-- [ ] Use the lyrics of every sheet to create a Google Document which contains all the lyrics
-- [ ] Take into account abreviations (e.g. Saint = St) for filter
 - [ ] Add comments to the list
