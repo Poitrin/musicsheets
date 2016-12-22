@@ -53,11 +53,11 @@ export class SheetSearchComponent implements OnInit, OnDestroy {
   }
 
   removeTag(sheet, tag) {
+    sheet.tags.splice(sheet.tags.indexOf(tag), 1);
     this._sheetService.update(sheet.id, sheet)
       .then(() => {
         this.loadingMessage.isLoading = false;
       });
-    sheet.tags.splice(sheet.tags.indexOf(tag), 1);
     this.loadingMessage.isLoading = true;
   }
 
