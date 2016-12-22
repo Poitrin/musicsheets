@@ -62,7 +62,9 @@ Insert the three `FOLDER_ID`s in the GAS project’s `main.gs` (the lines are at
 
 Don't forget to save the GAS and move it to your favorite destination.
 
-Moreover, copy the `FOLDER_ID` of the sheets folder and add the property `sheetsDriveFolderId: '{FOLDER_ID}'` to the files in the `/src/environments/` folder.
+Go to `src/environments/` and copy the `environment.ts-sample` twice. Rename one `environment.ts`, and the other `environment.prod.ts`.
+
+Next, copy the `FOLDER_ID` of the sheets folder and add the property `sheetsDriveFolderId: '{FOLDER_ID}'` to the `environment...ts` files in the `/src/environments/` folder.
 
 Back in the GAS editor, click `Publish > Deploy as API executable…`. Enter a name for the version (e.g. _V1_) and choose `Everybody` as the person who has access to the script. Note down the `Current API ID`, which we will call `scriptId`.
 Next, hit `Deploy`. You can hit continue when a warning (_New scopes detected_) appears.
@@ -83,7 +85,7 @@ Copy the `clientId` and insert the property into the environment files.
 Your environment files should now look like this:
 ```JavaScript
 export const environment = {
-  production: false,
+  production: false, // or true
   sheetsDriveFolderId: '...',
   clientId: '...',
   scriptId: '...',
