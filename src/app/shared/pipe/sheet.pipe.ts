@@ -14,7 +14,7 @@ export class SheetPipe implements PipeTransform {
       let normalizedName = sheet.name.normalize('NFD').toLowerCase();
       let normalizedQuery = query.normalize('NFD').toLowerCase();
 
-      return [normalizedName, ...sheet.tags].some(string => string.indexOf(normalizedQuery) >= 0);
+      return [normalizedName, ...sheet.tags].some(string => string.toLowerCase().indexOf(normalizedQuery) >= 0);
     });
   }
 
