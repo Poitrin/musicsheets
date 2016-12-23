@@ -4,6 +4,7 @@ import {environment} from "../../../../environments/environment";
 const CLIENT_ID = environment.clientId;
 const SCOPES = [
   'https://www.googleapis.com/auth/drive',
+  'https://www.googleapis.com/auth/script.storage',
   'https://www.googleapis.com/auth/spreadsheets',
   'https://www.googleapis.com/auth/userinfo.email'
 ].join(' ');

@@ -30,13 +30,12 @@ export class SetlistSearchComponent implements OnInit, OnDestroy {
     this._translateServiceSubscription.unsubscribe();
   }
 
-  destroy(setlistIndex) {
-
+  destroy(setlist:Setlist) {
     let userWantsToDestroy = confirm(this.CONFIRM_STRING);
     if (userWantsToDestroy) {
-      this._setlistService.destroy(setlistIndex)
+      this._setlistService.destroy(setlist.id)
         .then(() => {
-          this.setlists.splice(setlistIndex, 1);
+          this.setlists.splice(this.setlists.indexOf(setlist), 1);
           this.loadingMessage.isLoading = false;
         });
       this.loadingMessage.isLoading = true;

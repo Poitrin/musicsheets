@@ -57,41 +57,30 @@ The Frontend sends its requests to a _Google Apps Script_ (_GAS_).
 Log in to your Google account and [create a new Google Apps Script (GAS)](https://script.google.com/macros/create).
 In the GAS editor, create new _script files_ and paste the content from the corresponding files in `/musicsheets/src/external/*.gs`.
 
-Next, create three new folders (for _Setlists_, _Sheets_, and _Zips_). Open each folder and copy the `FOLDER_ID` from the browser's address bar (e.g. `https://drive.google.com/drive/u/1/folders/{HERE IS THE FOLDER_ID}`).
-Insert the three `FOLDER_ID`s in the GAS project’s `main.gs` (the lines are at the beginning of the script).
+Next, create three new folders - _Setlists_, _Sheets_, and _Zips_ - and share them with everybody and a "Can Edit" access level. Open each folder and copy the folder's id from the browser's address bar (e.g. `https://drive.google.com/drive/u/1/folders/{HERE IS THE FOLDER ID}`).
+Insert the three IDs as properties of the GAS: open the GAS editor, click on File > Project Properties > Tab "Script properties", and insert the 3 properties `SHEETS_FOLDER_ID`, `ZIPS_FOLDER_ID` and `SETLISTS_FOLDER_ID`, with their corresponding values.
 
-Don't forget to save the GAS and move it to your favorite destination.
+Don't forget to save the GAS (and move it to your favorite destination).
 
-Go to `src/environments/` and copy the `environment.ts-sample` twice. Rename one `environment.ts`, and the other `environment.prod.ts`.
+Go to `src/environments/` and copy the `environment.ts-sample` twice. Rename one file `environment.ts`, and the other `environment.prod.ts`.
 
-Next, copy the `FOLDER_ID` of the sheets folder and add the property `sheetsDriveFolderId: '{FOLDER_ID}'` to the `environment...ts` files in the `/src/environments/` folder.
+Next, copy the the sheets folder's ID and update the property `sheetsDriveFolderId: '{FOLDER_ID}'` to the `environment...ts` files in the `/src/environments/` folder.
 
 Back in the GAS editor, click `Publish > Deploy as API executable…`. Enter a name for the version (e.g. _V1_) and choose `Everybody` as the person who has access to the script. Note down the `Current API ID`, which we will call `scriptId`.
 Next, hit `Deploy`. You can hit continue when a warning (_New scopes detected_) appears.
 
-Insert the `scriptId` and your `developerEmail` (that you used to log in) in the environment files.
+Update the `scriptId` and your `developerEmail` (that you used to log in to the GAS editor) in the environment files.
 
 You'll need to create a `clientId`, in order to authenticate the user and execute the GAS.
 [Open the Google Developers Console](https://console.developers.google.com/) and make sure you've selected the right project (create a new one, if needed).
 
-Don't forget to enable the `Google Apps Script Execution API` and the `Drive API` in the Google Developers Console: `Dashboard > Activate API > … Search for (Google Apps Script Execution|Drive) API … > Activate`. Otherwise, you’ll receive a "Google Apps Script Execution API ... is disabled" error.
+Next, enable the `Google Apps Script Execution API` and the `Drive API` in the Google Developers Console: `Dashboard > Activate API > (Search for the two APIs) > Activate`. Otherwise, you’ll receive a "... API ... is disabled" error.
 
 Click on `Credentials` (on the left), then the button `Create credentials > OAuth-Client-ID`. You'll need to enter a product name for the OAuth consent screen, if necessary.
 
 Choose `Web application` as the application type and enter a name.
-Add `http://localhost:4200` to the list of authorized JavaScript sources. In production, this will be your own domain. Otherwise, you'll receive a `redirect_uri_mismatch` error. It will take a while until the source is updated.
-Copy the `clientId` and insert the property into the environment files.
-
-Your environment files should now look like this:
-```JavaScript
-export const environment = {
-  production: false, // or true
-  sheetsDriveFolderId: '...',
-  clientId: '...',
-  scriptId: '...',
-  developerEmail: '...'
-};
-```
+Add `http://localhost:4200` to the list of authorized JavaScript sources. In production, add your own domain. Otherwise, you'll receive a `redirect_uri_mismatch` error. It will take a while until the source is updated.
+Copy the `clientId` and update the property in the environment files.
 
 In order to avoid the "The caller does not have permission" error, make sure that your Console project is connected to the GAS. You can check this in the GAS editor, under `Resources > Developers Console Project...`
 

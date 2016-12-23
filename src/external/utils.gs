@@ -120,14 +120,8 @@ function removeFileById(id) {
 
 function removeFileFromFolderByName(folder, fileName) {
   var file = getFileByName(folder, fileName);
-
-  if (userIsCurrentlyLoggedIn(file.getOwner())) {
-    // we can remove the file without moving it to trash
-    removeFileById(file.getId());
-  } else {
-    // we can't remove it ("Insufficient permissions for this file"), so ...
-    folder.removeFile(file);
-  }
+  folder.removeFile(file);
+  removeFileById(file.getId());
 }
 
 function createZipWithFiles(filesArray) {

@@ -1,10 +1,7 @@
-var SHEETS_FOLDER_ID = "...";
-var ZIPS_FOLDER_ID = "...";
-var SETLISTS_FOLDER_ID = "...";
-
-var sheetsFolder = DriveApp.getFolderById(SHEETS_FOLDER_ID);
-var zipsFolder = DriveApp.getFolderById(ZIPS_FOLDER_ID);
-var setlistsFolder = DriveApp.getFolderById(SETLISTS_FOLDER_ID);
+var scriptProperties = PropertiesService.getScriptProperties();
+var sheetsFolder = DriveApp.getFolderById(scriptProperties.getProperty('SHEETS_FOLDER_ID'));
+var zipsFolder = DriveApp.getFolderById(scriptProperties.getProperty('ZIPS_FOLDER_ID'));
+var setlistsFolder = DriveApp.getFolderById(scriptProperties.getProperty('SETLISTS_FOLDER_ID'));
 
 var router = {
   sheets: {
@@ -51,9 +48,10 @@ var router = {
       setlist.setName(newSetlist.name);
     },
     DELETE: function (id) {
-      var setlistToBeDeleted = DriveApp.getFileById(id);
-      removeFileFromFolderByName(zipsFolder, setlistToBeDeleted.getName() + ".zip");
-      setlistsFolder.removeFile(setlistToBeDeleted);
+      var setlistToBeDeletedName = DriveApp.getFileById(id).getName();
+
+      removeFileFromFolderByName(zipsFolder, setlistToBeDeletedName + ".zip");
+      removeFileFromFolderByName(setlistsFolder, setlistToBeDeletedName);
     },
 
     download: {
@@ -87,3 +85,5 @@ function main(method, path, payload) {
       throw "UNKNOWN ROUTE";
   }
 }
+
+

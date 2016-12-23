@@ -20,7 +20,7 @@
 
 <div class="row">
   <div class="col-md-4"
-       *ngFor="let setlist of setlists | setlist:query | orderBy:'lastUpdated' | reverse; let i = index">
+       *ngFor="let setlist of setlists | setlist:query | orderBy:'lastUpdated' | reverse">
 
     <div class="card">
       <div class="card-block">
@@ -33,7 +33,7 @@
         <h6 class="card-subtitle text-muted" style="margin-bottom: 1.25rem">{{setlist.owner.name}}</h6>
         <a class="btn btn-primary" [href]="setlist.zipFileLink" target="_blank">{{ 'DOWNLOAD_ZIP' | translate }}</a>
         <button class="btn btn-secondary"
-                (click)="destroy(setlist.id)"
+                (click)="destroy(setlist)"
                 [disabled]="!setlist.isRemovable">{{ 'REMOVE' | translate }}
         </button>
       </div>
