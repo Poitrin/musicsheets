@@ -55,16 +55,9 @@ The build artifacts will be stored in the `dist/` directory.
 The Frontend sends its requests to a _Google Apps Script_ (_GAS_).
 
 Log in to your Google account and [create a new Google Apps Script (GAS)](https://script.google.com/macros/create).
-In the GAS editor, create new _script files_ and paste the content from the corresponding files in `/musicsheets/src/external/*.gs`.
+In the GAS editor, create new _script files_ and paste the content from the corresponding files in `src/external/*.gs`. Don't forget to save.
 
-Next, create three new folders - _Setlists_, _Sheets_, and _Zips_ - and share them with everybody and a "Can Edit" access level. Open each folder and copy the folder's id from the browser's address bar (e.g. `https://drive.google.com/drive/u/1/folders/{HERE IS THE FOLDER ID}`).
-Insert the three IDs as properties of the GAS: open the GAS editor, click on File > Project Properties > Tab "Script properties", and insert the 3 properties `SHEETS_FOLDER_ID`, `ZIPS_FOLDER_ID` and `SETLISTS_FOLDER_ID`, with their corresponding values.
-
-Don't forget to save the GAS (and move it to your favorite destination).
-
-Go to `src/environments/` and copy the `environment.ts-sample` twice. Rename one file `environment.ts`, and the other `environment.prod.ts`.
-
-Next, copy the the sheets folder's ID and update the property `sheetsDriveFolderId: '{FOLDER_ID}'` to the `environment...ts` files in the `/src/environments/` folder.
+Go to `src/environments/` and copy the `environment.ts-sample` twice. Rename one file `environment.ts`, and the other `environment.prod.ts`. Next, create three new folders - _Setlists_, _Sheets_, and _Zips_ - and share them with everybody and a "Can Edit" access level. Open each folder and insert each folder's id from the browser's address bar (e.g. `https://drive.google.com/drive/u/1/folders/{HERE IS THE FOLDER ID}`) as the corresponding property (`sheets/setlists/zipsFolderId`) in the `environment...ts` files. You can create different folders for different environments (development, production).
 
 Back in the GAS editor, click `Publish > Deploy as API executable…`. Enter a name for the version (e.g. _V1_) and choose `Everybody` as the person who has access to the script. Note down the `Current API ID`, which we will call `scriptId`.
 Next, hit `Deploy`. You can hit continue when a warning (_New scopes detected_) appears.

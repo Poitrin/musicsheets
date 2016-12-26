@@ -33,7 +33,7 @@ function getSheetsOfSetlist(setlistFile) {
 /**
  * Returns ID, name, isRemovable, ZIP file download url, owner (email, name), and sheets of the setlist
  */
-function getSetlistInformation(setlistFile) {
+function getSetlistInformation(setlistFile, zipsFolder) {
   return {
     id: setlistFile.getId(),
     name: setlistFile.getName(),

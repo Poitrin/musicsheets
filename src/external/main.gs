@@ -1,30 +1,32 @@
-var scriptProperties = PropertiesService.getScriptProperties();
-var sheetsFolder = DriveApp.getFolderById(scriptProperties.getProperty('SHEETS_FOLDER_ID'));
-var zipsFolder = DriveApp.getFolderById(scriptProperties.getProperty('ZIPS_FOLDER_ID'));
-var setlistsFolder = DriveApp.getFolderById(scriptProperties.getProperty('SETLISTS_FOLDER_ID'));
-
 var router = {
   sheets: {
-    GET: function () {
-      return getSheetsOfFolder(DriveApp.getFolderById(SHEETS_FOLDER_ID));
+    GET: function (parameters) {
+      var sheetsFolder = DriveApp.getFolderById(parameters.sheetsFolderId);
+      return getSheetsOfFolder(sheetsFolder);
     }
   },
 
   'sheets/:id': {
-    PUT: function (id, newSheet) {
+    PUT: function (id, parameters, newSheet) {
       DriveApp.getFileById(id).setDescription(JSON.stringify({tags: newSheet.tags}))
     }
   },
 
   setlists: {
-    GET: function () {
+    GET: function (parameters) {
+      var setlistsFolder = DriveApp.getFolderById(parameters.setlistsFolderId);
+      var zipsFolder = DriveApp.getFolderById(parameters.zipsFolderId);
+
       return getFilesArray(setlistsFolder).map(function (setlist) {
-        return getSetlistInformation(setlist);
+        return getSetlistInformation(setlist, zipsFolder);
       });
     },
-    POST: function (setlistToCreate) {
+    POST: function (parameters, setlistToCreate) {
       var spreadsheet = SpreadsheetApp.create(setlistToCreate.name);
       var spreadsheetFile = DriveApp.getFileById(spreadsheet.getId());
+      var setlistsFolder = DriveApp.getFolderById(parameters.setlistsFolderId);
+      var zipsFolder = DriveApp.getFolderById(parameters.zipsFolderId);
+
       setlistsFolder.addFile(spreadsheetFile);
       DriveApp.getRootFolder().removeFile(spreadsheetFile);
 
@@ -34,56 +36,56 @@ var router = {
   },
 
   'setlists/:id': {
-    PUT: function (id, newSetlist) {
+    PUT: function (id, parameters, newSetlist) {
       var setlist = DriveApp.getFileById(id);
       var spreadsheet = SpreadsheetApp.open(setlist);
 
       var files = writeSheetsToSpreadsheet(spreadsheet.getActiveSheet(), newSetlist.sheets);
 
       // write changes to file and update ZIP
+      var zipsFolder = DriveApp.getFolderById(parameters.zipsFolderId);
       var zipFile = getFileByName(zipsFolder, setlist.getName() + ".zip");
       updateZipFile(zipFile.getId(), createZipWithFiles(files));
 
       zipFile.setName(newSetlist.name + ".zip");
       setlist.setName(newSetlist.name);
     },
-    DELETE: function (id) {
+    DELETE: function (id, parameters) {
       var setlistToBeDeletedName = DriveApp.getFileById(id).getName();
 
-      removeFileFromFolderByName(zipsFolder, setlistToBeDeletedName + ".zip");
-      removeFileFromFolderByName(setlistsFolder, setlistToBeDeletedName);
-    },
-
-    download: {
-      GET: function (id) {
-        var zipFile = zipsFolder.getFilesByName(id).next();
-
-        return zipFile.getUrl();
-      }
+      removeFileFromFolderByName(DriveApp.getFolderById(parameters.zipsFolderId), setlistToBeDeletedName + ".zip");
+      removeFileFromFolderByName(DriveApp.getFolderById(parameters.setlistsFolderId), setlistToBeDeletedName);
     }
   }
 };
 
 function main(method, path, payload) {
+  var pathParts = path.split("?");
+  path = pathParts[0];
+
+  var parameters = {};
+  pathParts[1].split("&").forEach(function(parameter) {
+    var parts = parameter.split("=");
+    parameters[parts[0]] = parts[1];
+  });
+
   path = path.substring(1);
   var pathParts = path.split("/");
 
   switch (pathParts.length) {
     case 1:
-      return router[path][method](payload);
+      return router[path][method](parameters, payload);
       break;
 
     case 2:
-      return router[pathParts[0] + '/:id'][method](pathParts[1], payload);
+      return router[pathParts[0] + '/:id'][method](pathParts[1], parameters, payload);
       break;
 
     case 3:
-      return router[pathParts[0] + '/:id'][pathParts[2]][method](pathParts[1], payload);
+      return router[pathParts[0] + '/:id'][pathParts[2]][method](pathParts[1], parameters, payload);
       break;
 
     default:
       throw "UNKNOWN ROUTE";
   }
 }
-
-

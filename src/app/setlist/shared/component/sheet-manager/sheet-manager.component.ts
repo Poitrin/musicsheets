@@ -10,7 +10,7 @@ import {environment} from "../../../../../environments/environment";
 })
 export class SheetManagerComponent implements OnInit {
   public sheets;
-  public SHEETS_DRIVE_FOLDER = environment.sheetsDriveFolderId;
+  public SHEETS_DRIVE_FOLDER = environment.sheetsFolderId;
 
   @Input() setlist: Setlist;
   @ViewChild('sheetsLoadingMessage') sheetsLoadingMessage: LoadingMessageComponent;

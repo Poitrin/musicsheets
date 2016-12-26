@@ -5,7 +5,9 @@
 
 export const environment = {
   production: false,
-  sheetsDriveFolderId: '...',
+  sheetsFolderId: '...',
+  setlistsFolderId: '...',
+  zipsFolderId: '...',
   clientId: '...',
   scriptId: '...',
   developerEmail: '...'

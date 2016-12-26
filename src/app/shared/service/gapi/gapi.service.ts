@@ -44,6 +44,9 @@ export class GapiService {
   }
 
   protected makeApiCall(method, path, payload) {
+    // add parameters to path
+    path = `${path}?sheetsFolderId=${environment.sheetsFolderId}&setlistsFolderId=${environment.setlistsFolderId}&zipsFolderId=${environment.zipsFolderId}`;
+
     return new Promise(function(resolve, reject) {
       let currentUserEmail = gapi.auth2.getAuthInstance().currentUser.get().getBasicProfile().getEmail();
 

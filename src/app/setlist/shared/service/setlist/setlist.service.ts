@@ -46,8 +46,4 @@ export class SetlistService extends GapiService {
       }
     });
   }
-
-  download(id) {
-    return this.makeApiCall(GapiService.HTTP_METHODS.GET, `${this._path}/${id}/download`, null)
-  }
 }
