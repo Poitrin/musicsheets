@@ -5,6 +5,7 @@ import {ViewChild} from "@angular/core/src/metadata/di";
 import {SetlistService} from "../../setlist/shared/service/setlist/setlist.service";
 import {Setlist} from "../../setlist/shared/model/setlist/setlist";
 import {TranslateService} from "ng2-translate";
+import {environment} from "../../../environments/environment";
 
 @Component({
   selector: 'app-sheet-search',
@@ -14,6 +15,8 @@ import {TranslateService} from "ng2-translate";
 export class SheetSearchComponent implements OnInit, OnDestroy {
   public sheets: Sheet[];
   public _setlists: Setlist[];
+  public SHEETS_DRIVE_FOLDER = environment.sheetsFolderId;
+
   private _translateServiceSubscription;
   private PROMPT_STRING;
 
