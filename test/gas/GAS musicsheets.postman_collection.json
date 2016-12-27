@@ -1,0 +1,276 @@
+{
+	"variables": [],
+	"info": {
+		"name": "GAS musicsheets",
+		"_postman_id": "075b1b82-71a4-169b-2db9-2df3f9e7bb4f",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET /sheets",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"var availableSheets = jsonData.response.result;",
+							"postman.setEnvironmentVariable(\"availableSheets\", JSON.stringify(availableSheets));",
+							"tests[\"8 sheets available\"] = availableSheets.length === 8;",
+							"",
+							"postman.setEnvironmentVariable(\"firstSheetId\", availableSheets[0].id);"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://script.googleapis.com/v1/scripts/{{scriptId}}:run",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"function\": \"main\",\n    \"parameters\": [\"GET\", \"/sheets?sheetsFolderId={{sheetsFolderId}}\"],\n    \"devMode\": true\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "PUT /sheets",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);",
+							"",
+							"var updatedSheet = jsonData.response.result;",
+							"tests[\"Sheet has updated tags\"] = updatedSheet.tags[0] === \"Great song\";"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://script.googleapis.com/v1/scripts/{{scriptId}}:run",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"function\": \"main\",\n    \"parameters\": [\"PUT\", \"/sheets/{{firstSheetId}}?sheetsFolderId={{sheetsFolderId}}\",\n\t    {\n\t    \t\"tags\": [\"Great song\"]\n\t    }\n    ],\n    \"devMode\": true\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "POST /setlists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.clearEnvironmentVariable(\"sheetsForSetlist\");",
+							"",
+							"var jsonData = JSON.parse(responseBody).response.result;",
+							"var latestSetlistId = jsonData.id;",
+							"tests[\"Latest setlist has ID\"] = !!latestSetlistId;",
+							"postman.setEnvironmentVariable(\"latestSetlistId\", latestSetlistId);",
+							"",
+							"tests[\"New setlist has 3 sheets\"] = jsonData.sheets.length === 3;"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"// use 3 sheets for the new setlist",
+							"var sheetsForSetlist = JSON.parse(environment.availableSheets).slice(0, 3);",
+							"",
+							"postman.setEnvironmentVariable(\"sheetsForSetlist\", JSON.stringify(sheetsForSetlist));"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://script.googleapis.com/v1/scripts/{{scriptId}}:run",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"function\": \"main\",\n    \"parameters\": [\"POST\", \"/setlists?setlistsFolderId={{setlistsFolderId}}&zipsFolderId={{zipsFolderId}}\",\n    \t{\n    \t\t\"name\": \"My new list\",\n    \t\t\"sheets\": {{sheetsForSetlist}}\n    \t}\n    ],\n    \"devMode\": true\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "GET /setlists",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody).response.result;",
+							"tests[\"1 setlist exists\"] = jsonData.length === 1;",
+							"tests[\"Setlist has the correct ID\"] = jsonData[0].id === environment.latestSetlistId;"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://script.googleapis.com/v1/scripts/{{scriptId}}:run",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"function\": \"main\",\n    \"parameters\": [\"GET\", \"/setlists?setlistsFolderId={{setlistsFolderId}}&zipsFolderId={{zipsFolderId}}\"],\n    \"devMode\": true\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "PUT /setlists/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.clearEnvironmentVariable(\"sheetsForSetlist\");",
+							"",
+							"var jsonData = JSON.parse(responseBody).response.result;",
+							"var latestSetlistId = jsonData.id;",
+							"tests[\"Updated setlist has ID\"] = !!latestSetlistId;",
+							"postman.setEnvironmentVariable(\"latestSetlistId\", latestSetlistId);",
+							"",
+							"tests[\"Updated setlist has 5 sheets\"] = jsonData.sheets.length === 5;"
+						]
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"// use 5 sheets to update the setlist",
+							"var sheetsForSetlist = JSON.parse(environment.availableSheets).slice(0, 5);",
+							"",
+							"postman.setEnvironmentVariable(\"sheetsForSetlist\", JSON.stringify(sheetsForSetlist));"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://script.googleapis.com/v1/scripts/{{scriptId}}:run",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"function\": \"main\",\n    \"parameters\": [\"PUT\", \"/setlists/{{latestSetlistId}}?setlistsFolderId={{setlistsFolderId}}&zipsFolderId={{zipsFolderId}}\",\n    \t{\n    \t\t\"name\": \"My updated list\",\n    \t\t\"sheets\": {{sheetsForSetlist}}\n    \t}\n    ],\n    \"devMode\": true\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "DELETE /setlists/:id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"postman.clearEnvironmentVariable(\"latestSetlistId\");"
+						]
+					}
+				}
+			],
+			"request": {
+				"url": "https://script.googleapis.com/v1/scripts/{{scriptId}}:run",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"function\": \"main\",\n    \"parameters\": [\"DELETE\", \"/setlists/{{latestSetlistId}}?setlistsFolderId={{setlistsFolderId}}&zipsFolderId={{zipsFolderId}}\"],\n    \"devMode\": true\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

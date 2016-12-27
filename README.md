@@ -57,7 +57,7 @@ The Frontend sends its requests to a _Google Apps Script_ (_GAS_).
 Log in to your Google account and [create a new Google Apps Script (GAS)](https://script.google.com/macros/create).
 In the GAS editor, create new _script files_ and paste the content from the corresponding files in `src/external/*.gs`. Don't forget to save.
 
-Go to `src/environments/` and copy the `environment.ts-sample` twice. Rename one file `environment.ts`, and the other `environment.prod.ts`. Next, create three new folders - _Setlists_, _Sheets_, and _Zips_ - and share them with everybody and a "Can Edit" access level. Open each folder and insert each folder's id from the browser's address bar (e.g. `https://drive.google.com/drive/u/1/folders/{HERE IS THE FOLDER ID}`) as the corresponding property (`sheets/setlists/zipsFolderId`) in the `environment...ts` files. You can create different folders for different environments (development, production).
+Go to `src/environments/` and copy the `environment.ts-sample` twice. Rename one file `environment.ts`, and the other `environment.prod.ts`. Next, go to your Google Drive, create three new folders - _Setlists_, _Sheets_, and _Zips_ - and share them with everybody and a "Can Edit" access level. Open each folder and insert each folder's id from the browser's address bar (e.g. `https://drive.google.com/drive/u/1/folders/{HERE IS THE FOLDER ID}`) as the corresponding property (`sheets/setlists/zipsFolderId`) in the `environment...ts` files. This allows you to create different folders for different environments (development, production).
 
 Back in the GAS editor, click `Publish > Deploy as API executable…`. Enter a name for the version (e.g. _V1_) and choose `Everybody` as the person who has access to the script. Note down the `Current API ID`, which we will call `scriptId`.
 Next, hit `Deploy`. You can hit continue when a warning (_New scopes detected_) appears.
@@ -72,12 +72,37 @@ Next, enable the `Google Apps Script Execution API` and the `Drive API` in the G
 Click on `Credentials` (on the left), then the button `Create credentials > OAuth-Client-ID`. You'll need to enter a product name for the OAuth consent screen, if necessary.
 
 Choose `Web application` as the application type and enter a name.
-Add `http://localhost:4200` to the list of authorized JavaScript sources. In production, add your own domain. Otherwise, you'll receive a `redirect_uri_mismatch` error. It will take a while until the source is updated.
+Add `http://localhost:4200` to the list of authorized JavaScript sources. In production, add your own domain. Otherwise, you'll receive a `redirect_uri_mismatch` error when you try to log in. It will take a while until the source is updated.
 Copy the `clientId` and update the property in the environment files.
 
 In order to avoid the "The caller does not have permission" error, make sure that your Console project is connected to the GAS. You can check this in the GAS editor, under `Resources > Developers Console Project...`
 
 Every user who connects to the application the first time will have to confirm the needed permissions (show e-mail address, show basic profile information, etc.). In case you want to remove the permissions you gave, open the [Google Permissions Page](https://security.google.com/settings/security/permissions).
+
+## Testing
+### API testing with Postman
+I decided to use [Postman](https://www.getpostman.com) to call and test the GAS API.
+
+[Import the _Collection_](https://www.getpostman.com/docs/collections) and [the _Environment variables_](https://www.getpostman.com/docs/environments) from the corresponding files in `test/gas/`.
+
+Next, update your environment variables by inserting the corresponding values (`scriptId`, `sheetsFolderId`, etc.). In order to get the `accessToken` value, you'll need to [authenticate via Postman](https://www.getpostman.com/docs/helpers) and insert the `access_token` as the corresponding environment variable.
+
+Unfortunately, Postman will need a new access token after 60 minutes. (I haven't found a way to use a refresh token and get a new access token via Postman.)
+
+Please keep in mind that the tests depend on each other, so they have to be executed in the following order:
+
+* Insert 8 sheet music files in your sheets folder.  
+* `GET /sheets`  
+  Test makes sure that 8 sheets are available.
+* `PUT /sheets/:id {tags: [...]}`  
+  Test makes sure that the first sheet's tags have been updated.
+* `POST /setlists {...}`  
+  Test makes sure that the created setlist has 3 sheets.
+* `GET /setlists`  
+  Test makes sure that 1 setlist is available.
+* `PUT /setlists/:id {...}`  
+  Test makes sure that the setlist has 5 sheets now.
+* `DELETE /setlists/:id`
 
 ## Using _angular-cli_
 ### Code scaffolding
@@ -129,7 +154,8 @@ var request = {
 ```
 The following requests are possible at the moment:
 * Sheets  
-  `GET /sheets`  
+  `GET /sheets?sheetsFolderId=...&setlistsFolderId=...&zipsFolderId=...`  
+  (parameters are hidden in the following examples)  
   `PUT /sheets/:id {tags: [...]}`
 * Setlists  
   `GET /setlists`  
@@ -137,6 +163,14 @@ The following requests are possible at the moment:
   `PUT /setlists/:id {...}`  
   `DELETE /setlists/:id`
   
+#### Parameters
+Initially, I planned the following URL schema:  
+`GET /setlistsFolders/{setlistsFolderId}/setlists/{setlistId}`
+
+However, this would have let to the following URL:  
+`POST /setlistsFolders/{setlistsFolderId}/setlists/{setlistId}?zipsFolderId=...`.
+
+In order to stay consistent, each parameter must be added at the end of the URL.
 
 ## To do / ideas
 ### Audio files

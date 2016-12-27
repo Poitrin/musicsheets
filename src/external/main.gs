@@ -8,7 +8,10 @@ var router = {
 
   'sheets/:id': {
     PUT: function (id, parameters, newSheet) {
-      DriveApp.getFileById(id).setDescription(JSON.stringify({tags: newSheet.tags}))
+      var sheet = DriveApp.getFileById(id);
+      sheet.setDescription(JSON.stringify({tags: newSheet.tags}));
+
+      return getFileInformation(sheet);
     }
   },
 
@@ -32,6 +35,8 @@ var router = {
 
       var files = writeSheetsToSpreadsheet(spreadsheet.getActiveSheet(), setlistToCreate.sheets);
       var zipFile = saveZipToFolder(setlistToCreate.name, files, zipsFolder);
+
+      return getSetlistInformation(spreadsheetFile, zipsFolder);
     }
   },
 
@@ -49,6 +54,8 @@ var router = {
 
       zipFile.setName(newSetlist.name + ".zip");
       setlist.setName(newSetlist.name);
+
+      return getSetlistInformation(setlist, zipsFolder);
     },
     DELETE: function (id, parameters) {
       var setlistToBeDeletedName = DriveApp.getFileById(id).getName();
