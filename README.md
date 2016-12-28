@@ -87,6 +87,14 @@ I decided to use [Postman](https://www.getpostman.com) to call and test the GAS 
 
 Next, update your environment variables by inserting the corresponding values (`scriptId`, `sheetsFolderId`, etc.). In order to get the `accessToken` value, you'll need to [authenticate via Postman](https://www.getpostman.com/docs/helpers) and insert the `access_token` as the corresponding environment variable.
 
+For the authentication, you need to set Postman's Callback URL (`https://www.getpostman.com/oauth2/callback`) as an _Authorized redirect URI_ in the Google Developers Console (credentials of your OAuth Client ID). Insert the following values:
+
+* __Auth URL:__ `https://accounts.google.com/o/oauth2/v2/auth`
+* __Access Token URL:__ `https://www.googleapis.com/oauth2/v4/token`
+* __Client ID and Client Secret:__ you can find them on the credentials page of your OAuth Client ID.
+* __Scope:__ `https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets https://www.googleapis.com/auth/userinfo.email` (separated by spaces).
+* __Grant Type__: Authorization Code
+
 Unfortunately, Postman will need a new access token after 60 minutes. (I haven't found a way to use a refresh token and get a new access token via Postman.)
 
 Please keep in mind that the tests depend on each other, so they have to be executed in the following order:
