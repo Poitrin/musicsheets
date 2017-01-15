@@ -4,7 +4,7 @@ import {AuthenticationService} from "../../service/authentication/authentication
 import {LOGIN_URL} from "../../../app.routes";
 
 @Component({
-  selector: 'app-authentication',
+  selector: '[app-authentication]',
   templateUrl: 'authentication.component.html'
 })
 export class AuthenticationComponent implements OnInit {

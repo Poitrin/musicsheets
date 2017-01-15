@@ -18,12 +18,12 @@ export const routes:Routes = [
     canActivate: [AuthenticationGuardService]
   },
   {
-    path: `${LISTS_URL}/create`,
+    path: LISTS_URL + '/create',
     component: SetlistCreateComponent,
     canActivate: [AuthenticationGuardService]
   },
   {
-    path: `${LISTS_URL}/:id`,
+    path: LISTS_URL + '/:id',
     component: SetlistUpdateComponent,
     canActivate: [AuthenticationGuardService],
     resolve: {setlist: SetlistResolver}

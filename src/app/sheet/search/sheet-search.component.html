@@ -25,18 +25,22 @@
 
 <div class="row">
   <div class="col-md-12">
-    <ul class="list-group">
-      <li class="list-group-item" *ngFor="let sheet of sheets | sheet:query | orderBy:'name'">
+
+    <div class="list-group">
+      <div class="list-group-item list-group-item-action flex-column align-items-start"
+           *ngFor="let sheet of sheets | sheet:query | orderBy:'name'">
+
         <h6 class="list-group-item-heading"><a [href]="sheet.url" target="_blank">{{sheet.name}}</a></h6>
+
         <ul class="setlistsOfSheet">
           <li *ngFor="let tag of sheet.tags">
-            <span class="tag tag-primary">
+            <span class="badge badge-primary">
               <a class="pointer" (click)="removeTag(sheet, tag)">✗</a>
               {{tag}}
             </span>
           </li>
           <li>
-            <span class="tag tag-primary">
+            <span class="badge badge-primary">
               <a class="pointer" (click)="createTag(sheet)">+
                 {{ 'ADD_A_NEW_TAG' | translate }}
               </a>
@@ -46,10 +50,11 @@
 
         <ul class="setlistsOfSheet">
           <li *ngFor="let setlist of getSetlistsForSheet(sheet)">
-            <a [routerLink]="['/setlists', setlist.id]"><span class="tag tag-info">{{setlist.name}}</span></a>
+            <a [routerLink]="['/setlists', setlist.id]"><span class="badge badge-info">{{setlist.name}}</span></a>
           </li>
         </ul>
-      </li>
-    </ul>
+
+      </div>
+    </div>
   </div>
 </div>
