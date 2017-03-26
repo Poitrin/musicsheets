@@ -1,5 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
+import {HttpModule, Http} from '@angular/http';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
 import {AppComponent} from './app.component';
@@ -24,7 +25,13 @@ import {SetlistResolver} from "./setlist/shared/resolver/setlist-resolver";
 import {SheetSearchComponent} from './sheet/search/sheet-search.component';
 import {OrderByPipe} from './shared/pipe/order-by.pipe';
 import {ReversePipe} from "./shared/pipe/reverse.pipe";
-import {TranslateModule} from "ng2-translate";
+import {TranslateModule, TranslateLoader} from "@ngx-translate/core";
+import {TranslateHttpLoader} from "@ngx-translate/http-loader";
+
+// AoT requires an exported function for factories
+export function HttpLoaderFactory(http: Http) {
+  return new TranslateHttpLoader(http);
+}
 
 @NgModule({
   declarations: [
@@ -46,9 +53,16 @@ import {TranslateModule} from "ng2-translate";
   ],
   imports: [
     BrowserModule,
+    HttpModule,
     CommonModule,
     FormsModule,
-    TranslateModule.forRoot(),
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [Http]
+      }
+    }),
     RouterModule.forRoot(routes)
   ],
   providers: [

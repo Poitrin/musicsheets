@@ -1,10 +1,10 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {SheetService} from "../../shared/service/sheet/sheet.service";
 import {Sheet} from "../../shared/model/sheet/sheet";
-import {ViewChild} from "@angular/core/src/metadata/di";
+import {ViewChild} from "@angular/core";
 import {SetlistService} from "../../setlist/shared/service/setlist/setlist.service";
 import {Setlist} from "../../setlist/shared/model/setlist/setlist";
-import {TranslateService} from "ng2-translate";
+import {TranslateService} from "@ngx-translate/core";
 import {environment} from "../../../environments/environment";
 
 @Component({
@@ -13,6 +13,7 @@ import {environment} from "../../../environments/environment";
   styleUrls: ['sheet-search.component.css']
 })
 export class SheetSearchComponent implements OnInit, OnDestroy {
+  public query;
   public sheets: Sheet[];
   public _setlists: Setlist[];
   public SHEETS_DRIVE_FOLDER = environment.sheetsFolderId;

@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild, OnDestroy} from '@angular/core';
 import {SetlistService} from "../shared/service/setlist/setlist.service";
 import {LoadingMessageComponent} from "../../shared/component/loading-message/loading-message.component";
 import {Setlist} from "../shared/model/setlist/setlist";
-import {TranslateService} from "ng2-translate";
+import {TranslateService} from "@ngx-translate/core";
 import {Subscription} from "rxjs";
 
 @Component({
@@ -10,6 +10,7 @@ import {Subscription} from "rxjs";
   templateUrl: 'setlist-search.component.html'
 })
 export class SetlistSearchComponent implements OnInit, OnDestroy {
+  public query;
   public setlists: Setlist[];
   private _translateServiceSubscription: Subscription;
   private CONFIRM_STRING;

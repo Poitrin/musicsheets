@@ -9,6 +9,7 @@ import {environment} from "../../../../../environments/environment";
   templateUrl: 'sheet-manager.component.html'
 })
 export class SheetManagerComponent implements OnInit {
+  public query;
   public sheets;
   public SHEETS_DRIVE_FOLDER = environment.sheetsFolderId;
 
