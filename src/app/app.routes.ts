@@ -39,7 +39,7 @@ export const routes:Routes = [
   },
   {
     path: '**',
-    redirectTo: LISTS_URL,
+    redirectTo: SHEETS_URL,
     pathMatch: 'full'
   }
 ];
