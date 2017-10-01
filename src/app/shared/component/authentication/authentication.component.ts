@@ -1,7 +1,7 @@
 import {Component, NgZone, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthenticationService} from "../../service/authentication/authentication.service";
-import {LOGIN_URL} from "../../../app.routes";
+import {LOGIN_URL} from "../../../routes";
 
 @Component({
   selector: '[app-authentication]',

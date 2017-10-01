@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {SetlistService} from "../shared/service/setlist/setlist.service";
 import {Router, ActivatedRoute} from "@angular/router";
-import {LISTS_URL} from "../../app.routes";
 import {Setlist} from "../shared/model/setlist/setlist";
+import {LISTS_URL} from '../../routes';
 
 @Component({
   selector: 'app-setlist-update',

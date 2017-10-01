@@ -6,10 +6,7 @@ import {SetlistCreateComponent} from "./setlist/create/setlist-create.component"
 import {SetlistUpdateComponent} from "./setlist/update/setlist-update.component";
 import {SetlistResolver} from "./setlist/shared/resolver/setlist-resolver";
 import {SheetSearchComponent} from "./sheet/search/sheet-search.component";
-
-export const LISTS_URL = 'setlists';
-export const SHEETS_URL = 'sheets';
-export const LOGIN_URL = 'login';
+import {LISTS_URL, SHEETS_URL, LOGIN_URL} from "./routes";
 
 export const routes:Routes = [
   {

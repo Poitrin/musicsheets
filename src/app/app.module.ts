@@ -1,7 +1,7 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
-import {HttpModule, Http} from '@angular/http';
 import {CommonModule} from '@angular/common';
+import {HttpClientModule, HttpClient} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {AppComponent} from './app.component';
 import {RouterModule} from "@angular/router";
@@ -29,7 +29,7 @@ import {TranslateModule, TranslateLoader} from "@ngx-translate/core";
 import {TranslateHttpLoader} from "@ngx-translate/http-loader";
 
 // AoT requires an exported function for factories
-export function HttpLoaderFactory(http: Http) {
+export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
 
@@ -53,14 +53,14 @@ export function HttpLoaderFactory(http: Http) {
   ],
   imports: [
     BrowserModule,
-    HttpModule,
+    HttpClientModule,
     CommonModule,
     FormsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
         useFactory: HttpLoaderFactory,
-        deps: [Http]
+        deps: [HttpClient]
       }
     }),
     RouterModule.forRoot(routes)
