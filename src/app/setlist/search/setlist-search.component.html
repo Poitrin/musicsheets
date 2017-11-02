@@ -23,8 +23,8 @@
        *ngFor="let setlist of setlists | setlist:query | orderBy:'lastUpdated' | reverse">
 
     <div class="card">
-      <div class="card-block">
-        <span class="badge badge-pill badge-default float-right">
+      <div class="card-body">
+        <span class="badge badge-pill badge-secondary float-right">
           {{ setlist.lastUpdated | date:('DATE_FORMAT' | translate) }}</span>
         <h4 class="card-title">
           <a [routerLink]="['/setlists', setlist.id]">

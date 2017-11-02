@@ -31,7 +31,7 @@
 
       <div class="form-group" [hidden]="!query">
         <ul class="list-group">
-          <li class="list-group-item justify-content-between"
+          <li class="list-group-item d-flex justify-content-between"
               *ngFor="let sheet of sheets | sheet:query | slice:0:30  | orderBy:'name'">
             <a [href]="sheet.url" target="_blank">{{sheet.name}}</a>
 
@@ -54,7 +54,7 @@
 
     <div class="form-group">
       <ul class="list-group">
-        <li class="list-group-item justify-content-between" *ngFor="let sheet of setlist.sheets; let i = index">
+        <li class="list-group-item d-flex justify-content-between" *ngFor="let sheet of setlist.sheets; let i = index">
           <a [href]="sheet.url" target="_blank">{{sheet.name}}</a>
 
           <div class="btn-group btn-group-sm" role="group">
