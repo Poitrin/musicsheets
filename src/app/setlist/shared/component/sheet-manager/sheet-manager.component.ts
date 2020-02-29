@@ -14,7 +14,7 @@ export class SheetManagerComponent implements OnInit {
   public SHEETS_DRIVE_FOLDER = environment.sheetsFolderId;
 
   @Input() setlist: Setlist;
-  @ViewChild('sheetsLoadingMessage') sheetsLoadingMessage: LoadingMessageComponent;
+  @ViewChild('sheetsLoadingMessage', { static: true }) sheetsLoadingMessage: LoadingMessageComponent;
 
   constructor(private _sheetService: SheetService) {
   }

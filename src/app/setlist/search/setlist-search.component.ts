@@ -15,7 +15,7 @@ export class SetlistSearchComponent implements OnInit, OnDestroy {
   private _translateServiceSubscription: Subscription;
   private CONFIRM_STRING;
 
-  @ViewChild(LoadingMessageComponent) loadingMessage;
+  @ViewChild(LoadingMessageComponent, { static: true }) loadingMessage;
 
   constructor(private _setlistService: SetlistService,
               private _translateService: TranslateService) {

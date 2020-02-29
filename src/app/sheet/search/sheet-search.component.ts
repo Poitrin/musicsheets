@@ -21,7 +21,7 @@ export class SheetSearchComponent implements OnInit, OnDestroy {
   private _translateServiceSubscription;
   private PROMPT_STRING;
 
-  @ViewChild('sheetsLoadingMessage') loadingMessage;
+  @ViewChild('sheetsLoadingMessage', { static: true }) loadingMessage;
 
   constructor(private _sheetService: SheetService,
               private _setlistService: SetlistService,

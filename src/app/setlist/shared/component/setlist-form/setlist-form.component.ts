@@ -11,7 +11,7 @@ export class SetlistFormComponent implements OnInit {
   @Input() isLoading;
   @Input() setlist: Setlist;
 
-  @ViewChild('setlistForm') form;
+  @ViewChild('setlistForm', { static: true }) form;
 
   setlistNames: string[];
 
