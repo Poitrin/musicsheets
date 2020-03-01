@@ -1,17 +1,37 @@
 version: 2.1
-orbs:
-  node: circleci/node@1.1.6
 jobs:
-  build-and-test:
-    executor:
-      name: node/default
+  build:
+    branches:
+      only:
+        - master
+    docker:
+      - image: circleci/node:10
     steps:
       - checkout
-      - node/with-cache:
-          steps:
-            - run: npm install
-            - run: npm test
-workflows:
-    build-and-test:
-      jobs:
-        - build-and-test
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - v1-dependencies-
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run: npm build
+  request-approval:
+    type: approval
+    requires:
+      - build
+  deploy-ftp:
+    requires:
+      - request-approval
+    steps:
+      - run:
+          name: Install LFTP
+          command: |
+            sudo apt-get update;
+            sudo apt-get install lftp;
+      # - run:
+      #     name: Send Via SFTP
+      #     command: lftp sftp://${FTP_USER}:${FTP_PASSWORD}@${FTP_HOST} -e "mirror -v -R . /mytest --exclude .git/ --exclude .circleci/ ./; quit"
