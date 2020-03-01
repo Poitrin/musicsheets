@@ -19,5 +19,8 @@
       "dom"
     ],
     "module": "esnext"
+  },
+  "angularCompilerOptions": {
+    "preserveWhitespaces": true
   }
 }
