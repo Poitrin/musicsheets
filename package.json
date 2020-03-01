@@ -5,6 +5,7 @@
   "scripts": {
     "build": "ng build --prod",
     "upload": "./upload.sh",
+    "ftp-deploy": "node deploy.js",
     "bu": "npm run build && npm run upload",
     "ng": "ng",
     "start": "ng serve",
