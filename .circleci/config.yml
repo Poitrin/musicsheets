@@ -1,34 +1,39 @@
 version: 2.1
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # Fallback to using the latest cache if no exact match is found.
+            - v1-dependencies-
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run: npm build
+  request-approval:
+    type: approval
+  deploy-ftp:
+    steps:
+      - run: npm run ftp-deploy
 workflows:
   version: 2
   build-approve-deploy:
     jobs:
       - build:
-          branches:
-            only:
-              - master
-              - circleci-project-setup
-          docker:
-            - image: circleci/node:10
-          steps:
-            - checkout
-            - restore_cache:
-                keys:
-                  - v1-dependencies-{{ checksum "package.json" }}
-                  # Fallback to using the latest cache if no exact match is found.
-                  - v1-dependencies-
-            - run: npm install
-            - save_cache:
-                paths:
-                  - node_modules
-                key: v1-dependencies-{{ checksum "package.json" }}
-            - run: npm build
+          filters:
+            branches:
+              only:
+                - master
+                - circleci-project-setup
       - request-approval:
-          type: approval
           requires:
             - build
       - deploy-ftp:
           requires:
             - request-approval
-          steps:
-            - run: npm run ftp-deploy
